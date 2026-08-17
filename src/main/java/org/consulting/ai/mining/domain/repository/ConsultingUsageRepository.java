@@ -1,0 +1,9 @@
+package org.consulting.ai.mining.domain.repository;
+
+import io.quarkus.hibernate.orm.panache.PanacheRepository;
+import jakarta.enterprise.context.ApplicationScoped;
+import org.consulting.ai.mining.domain.model.ConsultingUsageMetric;
+
+@ApplicationScoped
+public class ConsultingUsageRepository implements PanacheRepository<ConsultingUsageMetric> {
+}
