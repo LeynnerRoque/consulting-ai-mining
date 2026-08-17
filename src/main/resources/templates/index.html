@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Consulting AI Mining | Analisador Inteligente</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body class="bg-slate-950 text-slate-100 font-sans min-h-screen flex flex-col justify-between selection:bg-indigo-500 selection:text-white">
+
+<!-- Header -->
+<header class="border-b border-slate-800 bg-slate-900/50 backdrop-blur-md sticky top-0 z-50">
+    <div class="max-w-6xl mx-auto px-6 h-16 flex items-center justify-between">
+        <div class="flex items-center space-x-3">
+            <div class="bg-indigo-600 p-2 rounded-xl text-white shadow-lg shadow-indigo-500/30">
+                <i class="fa-solid fa-brain text-xl"></i>
+            </div>
+            <span class="font-bold text-xl tracking-tight bg-gradient-to-r from-indigo-400 to-cyan-400 bg-clip-text text-transparent">
+                    Consulting AI Mining
+                </span>
+        </div>
+        <a href="/swagger-ui" target="_blank" class="text-xs bg-slate-800 hover:bg-slate-700 text-slate-300 px-3 py-1.5 rounded-lg border border-slate-700 transition flex items-center gap-2">
+            <i class="fa-solid fa-code"></i> API Swagger
+        </a>
+    </div>
+</header>
+
+<!-- Main Content -->
+<main class="max-w-5xl mx-auto px-6 py-12 w-full flex-grow">
+
+    <!-- Hero Section -->
+    <div class="text-center mb-12">
+        <h1 class="text-4xl font-extrabold tracking-tight mb-3 text-white">
+            Análise e Match de Currículos por Inteligência Artificial
+        </h1>
+        <p class="text-slate-400 max-w-2xl mx-auto text-sm sm:text-base">
+            Envie o currículo em PDF e cole a descrição da vaga. Nosso motor inteligente avalia instantaneamente a aderência e gera insights estratégicos para o seu perfil.
+        </p>
+    </div>
+
+    <!-- Form Card -->
+    <div class="bg-slate-900 border border-slate-800 rounded-2xl p-8 shadow-2xl relative overflow-hidden">
+        <div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-indigo-500 via-purple-500 to-cyan-400"></div>
+
+        <form id="miningForm" class="space-y-6">
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <!-- Upload de Currículo -->
+                <div class="space-y-2">
+                    <label class="block text-sm font-medium text-slate-300">
+                        <i class="fa-solid fa-file-pdf text-red-400 mr-2"></i> Currículo (PDF)
+                    </label>
+                    <div class="border-2 border-dashed border-slate-700 hover:border-indigo-500 rounded-xl p-6 text-center cursor-pointer transition bg-slate-950/50 relative group">
+                        <input type="file" id="resume" name="resume" accept=".pdf" required class="absolute inset-0 w-full h-full opacity-0 cursor-pointer">
+                        <div class="flex flex-col items-center space-y-2">
+                            <i class="fa-solid fa-cloud-arrow-up text-3xl text-indigo-400 group-hover:scale-110 transition duration-300"></i>
+                            <p id="fileName" class="text-sm text-slate-300 font-medium">Arraste o PDF ou <span class="text-indigo-400 underline">clique para selecionar</span></p>
+                            <span class="text-xs text-slate-500">Apenas arquivos .pdf</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Descrição da Vaga -->
+                <div class="space-y-2 flex flex-col">
+                    <label class="block text-sm font-medium text-slate-300">
+                        <i class="fa-solid fa-briefcase text-cyan-400 mr-2"></i> Descrição da Vaga
+                    </label>
+                    <textarea id="jobDescription" name="jobDescription" rows="5" required
+                              placeholder="Cole os requisitos e a descrição completa da vaga aqui..."
+                              class="w-full bg-slate-950 border border-slate-700 rounded-xl p-4 text-sm text-slate-100 placeholder-slate-600 focus:outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 resize-none flex-grow"></textarea>
+                </div>
+            </div>
+
+            <button type="submit" id="submitBtn" class="w-full bg-gradient-to-r from-indigo-600 to-indigo-700 hover:from-indigo-500 hover:to-indigo-600 text-white font-semibold py-4 rounded-xl shadow-lg shadow-indigo-600/30 transition duration-300 flex items-center justify-center space-x-2 cursor-pointer">
+                <i class="fa-solid fa-wand-magic-sparkles"></i>
+                <span>Executar Mineração Inteligente</span>
+            </button>
+        </form>
+    </div>
+
+    <!-- Loading State -->
+    <div id="loadingState" class="hidden mt-12 bg-slate-900 border border-slate-800 rounded-2xl p-12 text-center shadow-2xl">
+        <div class="relative w-20 h-20 mx-auto mb-6">
+            <div class="absolute inset-0 border-4 border-indigo-500/20 rounded-full"></div>
+            <div class="absolute inset-0 border-4 border-indigo-500 rounded-full animate-spin border-t-transparent"></div>
+            <div class="absolute inset-0 flex items-center justify-center text-indigo-400">
+                <i class="fa-solid fa-brain animate-pulse"></i>
+            </div>
+        </div>
+        <h3 class="text-xl font-bold text-white mb-2">Minerando currículo e avaliando requisitos...</h3>
+        <p class="text-slate-400 text-sm">Isso leva apenas alguns segundos. Nossa IA está cruzando hard skills e gaps...</p>
+    </div>
+
+    <!-- Result Dashboard -->
+    <div id="resultDashboard" class="hidden mt-12 space-y-6">
+        <div class="bg-slate-900 border border-slate-800 rounded-2xl p-6 shadow-2xl flex flex-col md:flex-row items-center justify-between gap-6">
+            <div>
+                <span class="text-xs uppercase tracking-widest text-indigo-400 font-bold">Cargo Analisado</span>
+                <h2 id="resCargo" class="text-2xl font-black text-white mt-1">-</h2>
+                <span id="resTier" class="inline-block mt-2 px-3 py-1 bg-indigo-500/20 text-indigo-300 border border-indigo-500/30 rounded-full text-xs font-semibold">-</span>
+            </div>
+
+            <div class="flex items-center space-x-4 bg-slate-950 px-6 py-4 rounded-xl border border-slate-800">
+                <div class="text-right">
+                    <span class="block text-xs text-slate-400">Score de Match</span>
+                    <span id="resScoreText" class="text-2xl font-black text-emerald-400">0%</span>
+                </div>
+                <div class="w-12 h-12 rounded-full bg-emerald-500/10 border border-emerald-500/30 flex items-center justify-center text-emerald-400 text-xl font-bold">
+                    <i class="fa-solid fa-chart-line"></i>
+                </div>
+            </div>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div class="bg-slate-900 border border-slate-800 rounded-2xl p-6 shadow-xl space-y-4">
+                <div class="flex items-center space-x-3 border-b border-slate-800 pb-3">
+                    <div class="bg-emerald-500/10 text-emerald-400 p-2 rounded-lg">
+                        <i class="fa-solid fa-circle-check"></i>
+                    </div>
+                    <h3 class="font-bold text-emerald-400 text-lg">Pontos de Match Forte</h3>
+                </div>
+                <ul id="resMatches" class="space-y-2.5 text-sm text-slate-300"></ul>
+            </div>
+
+            <div class="bg-slate-900 border border-slate-800 rounded-2xl p-6 shadow-xl space-y-4">
+                <div class="flex items-center space-x-3 border-b border-slate-800 pb-3">
+                    <div class="bg-amber-500/10 text-amber-400 p-2 rounded-lg">
+                        <i class="fa-solid fa-triangle-exclamation"></i>
+                    </div>
+                    <h3 class="font-bold text-amber-400 text-lg">Gaps Identificados</h3>
+                </div>
+                <ul id="resGaps" class="space-y-2.5 text-sm text-slate-300"></ul>
+            </div>
+        </div>
+
+        <div class="bg-slate-900 border border-slate-800 rounded-2xl p-6 shadow-xl space-y-4">
+            <div class="flex items-center space-x-3 border-b border-slate-800 pb-3">
+                <div class="bg-cyan-500/10 text-cyan-400 p-2 rounded-lg">
+                    <i class="fa-solid fa-lightbulb"></i>
+                </div>
+                <h3 class="font-bold text-cyan-400 text-lg">Dicas Estratégicas de Customização</h3>
+            </div>
+            <ul id="resTips" class="grid grid-cols-1 md:grid-cols-2 gap-3 text-sm text-slate-300"></ul>
+        </div>
+
+        <div class="text-center pt-4">
+            <button type="button" id="resetBtn" class="bg-slate-800 hover:bg-slate-700 text-slate-300 px-6 py-3 rounded-xl font-medium transition text-sm inline-flex items-center gap-2 border border-slate-700 cursor-pointer">
+                <i class="fa-solid fa-rotate-left"></i> Realizar Nova Análise
+            </button>
+        </div>
+    </div>
+</main>
+
+<!-- Footer -->
+<footer class="border-t border-slate-800 py-6 text-center text-xs text-slate-500 space-y-3">
+    <div class="flex items-center justify-center space-x-4">
+        <button type="button" id="openAboutBtn" class="text-indigo-400 hover:text-indigo-300 transition underline cursor-pointer">
+            <i class="fa-solid fa-circle-info mr-1"></i> Sobre a Ferramenta
+        </button>
+        <span class="text-slate-700">&bull;</span>
+        <a href="https://www.linkedin.com/in/leynner-roque-59994847" target="_blank" rel="noopener noreferrer" class="text-cyan-400 hover:text-cyan-300 transition inline-flex items-center gap-1">
+            <i class="fa-brands fa-linkedin"></i> LinkedIn Profissional
+        </a>
+    </div>
+    <p>Consulting AI Mining &bull; Powered by Quarkus, Llama 3.3 & Aiven Cloud</p>
+</footer>
+
+<!-- Modal "Sobre a Ferramenta" -->
+<div id="aboutModal" class="fixed inset-0 bg-slate-950/80 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
+    <div class="bg-slate-900 border border-slate-800 rounded-2xl max-w-lg w-full p-6 shadow-2xl relative space-y-4">
+        <div class="flex items-center justify-between border-b border-slate-800 pb-3">
+            <div class="flex items-center space-x-2 text-indigo-400 font-bold text-lg">
+                <i class="fa-solid fa-brain"></i>
+                <span>Sobre o Consulting AI Mining</span>
+            </div>
+            <button type="button" id="closeAboutBtn" class="text-slate-400 hover:text-white transition text-lg cursor-pointer">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+        </div>
+
+        <div class="text-slate-300 text-sm space-y-3 leading-relaxed">
+            <p>
+                O <strong class="text-white">Consulting AI Mining</strong> é um motor de inteligência artificial projetado para analisar profundamente a compatibilidade entre currículos profissionais e descrições de vagas no mercado corporativo.
+            </p>
+            <p>
+                <strong class="text-indigo-400">Como funciona:</strong> O sistema extrai o texto do seu currículo em PDF, cruza as hard skills, experiências e tecnologias com os requisitos exigidos pela descrição da vaga através de modelos avançados de IA (Llama 3.3), gerando um score de match preciso, identificando gaps técnicos e estruturando dicas estratégicas de customização.
+            </p>
+            <p class="text-xs text-slate-500 italic pt-2">
+                Desenvolvido com arquitetura moderna e resiliente em Java (Quarkus) e processamento em nuvem.
+            </p>
+        </div>
+
+        <div class="text-right pt-2">
+            <button type="button" id="closeAboutModalBtn" class="bg-indigo-600 hover:bg-indigo-500 text-white px-4 py-2 rounded-xl text-xs font-semibold transition cursor-pointer">
+                Entendido
+            </button>
+        </div>
+    </div>
+</div>
+
+<!-- Script separado e servido estaticamente pelo Quarkus -->
+<script src="/js/app.js"></script>
+</body>
+</html>

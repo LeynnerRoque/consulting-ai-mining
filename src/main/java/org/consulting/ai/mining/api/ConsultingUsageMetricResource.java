@@ -1,4 +1,4 @@
-package org.consulting.ai.mining.resource;
+package org.consulting.ai.mining.api;
 
 import org.consulting.ai.mining.business.services.MatchService;
 import org.consulting.ai.mining.business.services.PdfService;
