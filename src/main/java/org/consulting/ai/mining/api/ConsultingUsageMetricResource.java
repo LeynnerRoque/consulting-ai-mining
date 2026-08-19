@@ -1,5 +1,6 @@
 package org.consulting.ai.mining.api;
 
+import org.consulting.ai.mining.business.dto.AnaliseVagaDTO;
 import org.consulting.ai.mining.business.services.MatchService;
 import org.consulting.ai.mining.business.services.PdfService;
 import org.consulting.ai.mining.business.dto.ConsultingUsageMetricDTO;
@@ -30,7 +31,7 @@ public class ConsultingUsageMetricResource {
     public Response analyzeResume(@BeanParam ResumeUploadForm form) {
         try {
             String resumeText = pdfService.extractTextFromPdf(form.resumeFile);
-            ConsultingUsageMetricDTO result = matchService.analyzeAndSaveMetric(resumeText, form.jobDescription);
+            AnaliseVagaDTO result = matchService.analyzeAndSaveMetric(resumeText, form.jobDescription);
             return Response.ok(result).build();
 
         } catch (Exception e) {

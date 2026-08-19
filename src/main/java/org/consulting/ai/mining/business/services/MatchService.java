@@ -26,10 +26,10 @@ public class MatchService {
     }
 
     @Transactional
-    public ConsultingUsageMetricDTO analyzeAndSaveMetric(String resumeText, String jobDescription) {
+    public AnaliseVagaDTO analyzeAndSaveMetric(String resumeText, String jobDescription) {
         AnaliseVagaDTO analise = groqAiService.analisarCurriculoComGroq(resumeText, jobDescription);
         var entity = mapper.toEntity(analise);
         repository.persist(entity);
-        return mapper.map(entity);
+        return analise;
     }
 }

@@ -38,44 +38,38 @@ miningForm.addEventListener('submit', async (e) => {
 
         const data = await response.json();
 
-        // Mapeando com base no JSON retornado pela sua API
-        document.getElementById('resCargo').textContent = data.seniorityDetected || 'Desenvolvedor Java';
-        document.getElementById('resTier').textContent = data.seniorityDetected || 'N/A';
-        document.getElementById('resScoreText').textContent = (data.matchScore ?? 0) + '%';
+        // Mapeando com base no seu DTO (AnaliseVagaDTO)
+        document.getElementById('resCargo').textContent = data.cargo_vaga || 'Desenvolvedor';
+        document.getElementById('resTier').textContent = data.classificacao_tier || 'N/A';
+        document.getElementById('resScoreText').textContent = (data.score_compatibilidade ?? 0) + '%';
 
-        // Preenchendo Pontos de Match
+        // Preenchendo Pontos de Match (pontos_match_forte)
         const matchesList = document.getElementById('resMatches');
         matchesList.innerHTML = '';
-        if (data.matchedTechnologies && data.matchedTechnologies.length > 0) {
-            data.matchedTechnologies.forEach(item => {
+        if (data.pontos_match_forte && data.pontos_match_forte.length > 0) {
+            data.pontos_match_forte.forEach(item => {
                 matchesList.innerHTML += `<li class="flex items-start space-x-2"><i class="fa-solid fa-check text-emerald-400 mt-1 flex-shrink-0"></i><span>${item}</span></li>`;
             });
-        } else {
-            matchesList.innerHTML = `<li class="flex items-start space-x-2"><i class="fa-solid fa-check text-emerald-400 mt-1 flex-shrink-0"></i><span>Total de tecnologias compatíveis: ${data.technologiesMatchedCount || 0}</span></li>`;
         }
 
-        // Preenchendo Gaps
+        // Preenchendo Gaps (gaps_identificados)
         const gapsList = document.getElementById('resGaps');
         gapsList.innerHTML = '';
-        if (data.gaps && data.gaps.length > 0) {
-            data.gaps.forEach(item => {
+        if (data.gaps_identificados && data.gaps_identificados.length > 0) {
+            data.gaps_identificados.forEach(item => {
                 gapsList.innerHTML += `<li class="flex items-start space-x-2"><i class="fa-solid fa-xmark text-amber-400 mt-1 flex-shrink-0"></i><span>${item}</span></li>`;
             });
-        } else if (data.gapsCount > 0) {
-            gapsList.innerHTML = `<li class="text-slate-400 italic">Foram identificados ${data.gapsCount} pontos de melhoria na stack.</li>`;
         } else {
-            gapsList.innerHTML = '<li class="text-slate-500 italic">Nenhum gap crítico identificado! Excelente match.</li>';
+            gapsList.innerHTML = '<li class="text-slate-500 italic">Nenhum gap crítico identificado!</li>';
         }
 
-        // Preenchendo Dicas Estratégicas
+        // Preenchendo Dicas Estratégicas (dicas_customizacao)
         const tipsList = document.getElementById('resTips');
         tipsList.innerHTML = '';
-        if (data.recommendations && data.recommendations.length > 0) {
-            data.recommendations.forEach(item => {
+        if (data.dicas_customizacao && data.dicas_customizacao.length > 0) {
+            data.dicas_customizacao.forEach(item => {
                 tipsList.innerHTML += `<li class="bg-slate-950 p-3 rounded-xl border border-slate-800 flex items-start space-x-2"><i class="fa-solid fa-circle-dot text-cyan-400 mt-1 flex-shrink-0 text-xs"></i><span>${item}</span></li>`;
             });
-        } else {
-            tipsList.innerHTML = '<li class="bg-slate-950 p-3 rounded-xl border border-slate-800 text-slate-400 italic">Foque em evidenciar sua experiência com arquitetura corporativa e testes automatizados.</li>';
         }
 
         loadingState.classList.add('hidden');
