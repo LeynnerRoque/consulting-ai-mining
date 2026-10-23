@@ -5,7 +5,7 @@ import jakarta.ws.rs.GET;
 import jakarta.ws.rs.Path;
 import jakarta.ws.rs.core.Response;
 
-@Path("/")
+@Path("/api")
 public class HealthController {
 
     @GET
