@@ -5,9 +5,7 @@ import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.transaction.Transactional;
 import org.consulting.ai.mining.business.ai.GroqAiService;
 import org.consulting.ai.mining.business.dto.AnaliseVagaDTO;
-import org.consulting.ai.mining.business.dto.ConsultingUsageMetricDTO;
 import org.consulting.ai.mining.business.mappers.ConsultingUsageMetricMapper;
-import org.consulting.ai.mining.domain.model.ConsultingUsageMetric;
 import org.consulting.ai.mining.domain.repository.ConsultingUsageRepository;
 
 import java.math.BigDecimal;
